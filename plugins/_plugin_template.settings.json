@@ -1,0 +1,4 @@
+{
+  "ENABLED": true,
+  "MESSAGE": "Hello {mention}!"
+}
