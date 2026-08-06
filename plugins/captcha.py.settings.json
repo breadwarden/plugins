@@ -1,0 +1,16 @@
+{
+  "CAPTCHA_ENABLED": true,
+  "CAPTCHA_CHANNEL_ID": "1534910978137788436",
+  "VERIFIED_ROLE_ID": "1508759124261736510",
+  "UNVERIFIED_ROLE_ID": "",
+  "enabled_types": [
+    "text",
+    "math",
+    "pattern",
+    "question"
+  ],
+  "difficulty": "medium",
+  "timeout_minutes": 10,
+  "max_attempts": 3,
+  "image_chance": 0.5
+}
