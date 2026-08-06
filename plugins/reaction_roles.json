@@ -21,57 +21,5 @@
         "role_name": "Verified"
       }
     ]
-  },
-  "1414201331987644417_1425052128279269437": {
-    "channel_id": 1414201331987644417,
-    "message_id": 1425052128279269437,
-    "title": "testing 2.0",
-    "description": "React to get roles!",
-    "image_url": "https://images-ext-1.discordapp.net/external/Pj-uE9SOwDtwiWLGUQI1ZJOtHBIMWcfSch9gHhtJr0Y/https/i.imgur.com/FZl1LEE.png?format=webp&quality=lossless",
-    "roles": [
-      {
-        "emoji": "<:ghostheart:1169708864028029039>",
-        "role_id": 1425050597094199356,
-        "role_name": "test"
-      }
-    ]
-  },
-  "1169248821121929236_1425052982105346141": {
-    "channel_id": 1169248821121929236,
-    "message_id": 1425052982105346141,
-    "title": "Claim your roles",
-    "description": "React to get roles!",
-    "image_url": null,
-    "roles": [
-      {
-        "emoji": "🎥",
-        "role_id": 1242492539085262869,
-        "role_name": "Stream Notified"
-      },
-      {
-        "emoji": "🔔",
-        "role_id": 1169377662591057990,
-        "role_name": "Notified"
-      }
-    ]
-  },
-  "1205802259682959401_1425092266921295985": {
-    "channel_id": 1205802259682959401,
-    "message_id": 1425092266921295985,
-    "title": "Driver roles",
-    "description": "React to get roles!",
-    "image_url": null,
-    "roles": [
-      {
-        "emoji": "🚘",
-        "role_id": 1191134906068238366,
-        "role_name": "Drive Together"
-      },
-      {
-        "emoji": "🧑‍🌾",
-        "role_id": 1174687813497802882,
-        "role_name": "Farming Server"
-      }
-    ]
   }
 }
