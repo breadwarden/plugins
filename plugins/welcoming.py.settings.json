@@ -1,0 +1,12 @@
+{
+  "ADMIN_ROLE_ID": 00,
+  "DEV_ROLE_ID": 00,
+  "WELCOME_ENABLED": true,
+  "DM_ENABLED": true,
+  "CHANNEL_ENABLED": true,
+  "CHANNEL_MESSAGE": "testing {display_name} {mention} {guild_name}",
+  "DM_MESSAGE": "testing DM {member_count}",
+  "EMBED_TEMPLATE": "",
+  "DM_EMBED_TEMPLATE": "",
+  "WELCOME_CHANNEL_ID": ""
+}
