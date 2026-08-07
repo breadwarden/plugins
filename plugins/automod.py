@@ -242,6 +242,26 @@ class AutomodListener:
         self._recent_messages = collections.defaultdict(collections.deque)
         self._recent_violations = collections.defaultdict(collections.deque)
 
+    def _warning_count(self, user_id):
+        if not moderation or not hasattr(moderation, "_ensure_data"):
+            return 0
+        cases = moderation._ensure_data().get("cases", [])
+        return sum(
+            1
+            for case in cases
+            if case.get("user_id") == str(user_id) and case.get("action") in {"WARN", "AUTOMOD"}
+        )
+
+    async def _unban_after(self, guild_id, user_id):
+        await asyncio.sleep(24 * 60 * 60)
+        guild = self.bot.get_guild(guild_id)
+        if not guild:
+            return
+        try:
+            await guild.unban(discord.Object(id=user_id), reason="Automod one-day ban expired")
+        except (discord.NotFound, discord.Forbidden, discord.HTTPException) as exc:
+            print(f"Automod: failed to remove one-day ban for {user_id}: {exc}")
+
     def _in_scope(self, message):
         guild = getattr(message, "guild", None)
         return bool(ENABLED and guild and GUILD_ID and guild.id == GUILD_ID)
@@ -313,12 +333,45 @@ class AutomodListener:
             except discord.HTTPException as exc:
                 print(f"Automod: failed to send violation log: {exc}")
 
-        if WARN_THRESHOLD_FOR_TIMEOUT and len(violations) >= WARN_THRESHOLD_FOR_TIMEOUT:
+        warning_count = self._warning_count(message.author.id)
+        if warning_count > 30:
+            action = "ban"
+            escalation = (
+                f"{message.author.mention}, you have more than 30 warnings. "
+                "You will be banned for 1 day. Further violations may lead to additional moderation action."
+            )
+        elif warning_count > 15:
+            action = "kick"
+            escalation = (
+                f"{message.author.mention}, you have more than 15 warnings. "
+                "You will be kicked. Further violations may lead to a ban."
+            )
+        elif warning_count > 5:
+            action = "timeout"
+            escalation = (
+                f"{message.author.mention}, you have more than 5 warnings. "
+                "You will be timed out for 20 minutes or longer. Further violations may lead to a ban."
+            )
+        else:
+            action = None
+            escalation = None
+
+        if action:
             try:
-                await message.author.timeout(dt.timedelta(minutes=10), reason=f"Automod escalation: {reason}")
+                async with message.channel.typing():
+                    await asyncio.sleep(2)
+                    await message.channel.send(escalation, delete_after=60)
+                moderation_reason = f"Automod escalation at {warning_count} warnings: {reason}"
+                if action == "ban":
+                    await message.author.ban(reason=moderation_reason)
+                    asyncio.create_task(self._unban_after(message.guild.id, message.author.id))
+                elif action == "kick":
+                    await message.author.kick(reason=moderation_reason)
+                else:
+                    await message.author.timeout(dt.timedelta(minutes=20), reason=moderation_reason)
                 violations.clear()
             except (discord.Forbidden, discord.HTTPException) as exc:
-                print(f"Automod: failed to timeout {message.author}: {exc}")
+                print(f"Automod: failed to apply {action} to {message.author}: {exc}")
 
     async def on_message(self, message):
         if getattr(message.author, "bot", False) or not self._in_scope(message) or self._is_whitelisted(message):
